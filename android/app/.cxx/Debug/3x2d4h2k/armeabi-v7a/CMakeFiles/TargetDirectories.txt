@@ -1,0 +1,2 @@
+D:/BitBucket/SNMProjects/NBFT Broker/android/app/.cxx/Debug/3x2d4h2k/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/BitBucket/SNMProjects/NBFT Broker/android/app/.cxx/Debug/3x2d4h2k/armeabi-v7a/CMakeFiles/rebuild_cache.dir
