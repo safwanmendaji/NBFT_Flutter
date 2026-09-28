@@ -87,6 +87,17 @@ class Propertyapis {
       ProgressDialogUtils.dismissProgressDialog();
     }
   }
+  static Future<PropertiesModel> getAllProperties({required bool isShowProgress, required Map<String, dynamic> params, required String id, required BuildContext context}) async {
+    try {
+      isShowProgress != true ? null : ProgressDialogUtils.showProgressDialog(context);
+      final response = await ApiService().get(AppEndpoints.myproperties, params: params);
+      return PropertiesModel.fromJson(response.data);
+    } on DioException catch (error) {
+      throw ErrorManager().handleError(e: error, context: context);
+    } finally {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
+  }
 
   static Future<void> markInterest({
     required BuildContext context,

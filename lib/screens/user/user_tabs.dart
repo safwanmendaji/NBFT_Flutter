@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
- import 'package:flutter_nobrokeragefortenants/core/constants/app_colors.dart';
- import 'package:flutter_nobrokeragefortenants/core/constants/app_images.dart';
- import 'package:flutter_nobrokeragefortenants/core/constants/local_strings.dart';
- import 'package:flutter_nobrokeragefortenants/core/utils/preferences.dart';
- import 'package:flutter_nobrokeragefortenants/models/properties/properties_model.dart';
- import 'package:flutter_nobrokeragefortenants/services/api/api_endpoints.dart';
- import 'package:flutter_nobrokeragefortenants/services/api/property_api.dart';
- import 'package:flutter_nobrokeragefortenants/services/user_property_storage.dart';
+import 'package:flutter_nobrokeragefortenants/core/constants/app_colors.dart';
+import 'package:flutter_nobrokeragefortenants/core/constants/app_images.dart';
+import 'package:flutter_nobrokeragefortenants/core/constants/local_strings.dart';
+import 'package:flutter_nobrokeragefortenants/core/utils/preferences.dart';
+import 'package:flutter_nobrokeragefortenants/models/properties/properties_model.dart';
+import 'package:flutter_nobrokeragefortenants/services/api/api_endpoints.dart';
+import 'package:flutter_nobrokeragefortenants/services/api/property_api.dart';
+import 'package:flutter_nobrokeragefortenants/services/user_property_storage.dart';
 
 class UserInterestedScreen extends StatefulWidget {
   const UserInterestedScreen({super.key});
@@ -36,12 +36,7 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
 
   Future<void> _loadProperties() async {
     try {
-      final response = await Propertyapis.getproperties(
-        isShowProgress: false,
-        context: context,
-        id: Prefs.getString(LocalStrings.userid),
-        params: {},
-      );
+      final response = await Propertyapis.getAllProperties(isShowProgress: false, context: context, id: Prefs.getString(LocalStrings.userid), params: {});
       if (mounted) {
         setState(() {
           properties = response.data ?? [];
@@ -55,53 +50,29 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
 
   List<Data> get filteredProperties {
     final savedIds = UserPropertyStorage.ids(UserPropertyStorage.wishlistKey);
-    final interestedIds = UserPropertyStorage.ids(
-      UserPropertyStorage.interestedKey,
-    );
+    final interestedIds = UserPropertyStorage.ids(UserPropertyStorage.interestedKey);
     final selectedIds = selectedTab == 0 ? savedIds : interestedIds;
     final query = searchController.text.trim().toLowerCase();
 
     return properties.where((property) {
-      final isInSelectedList =
-          property.sId != null && selectedIds.contains(property.sId);
-      final searchableText =
-          [
-            property.title,
-            property.location,
-            property.area,
-            property.category,
-            property.format,
-          ].whereType<String>().join(' ').toLowerCase();
-      return isInSelectedList &&
-          (query.isEmpty || searchableText.contains(query));
+      final isInSelectedList = property.sId != null && selectedIds.contains(property.sId);
+      final searchableText = [property.title, property.location, property.area, property.category, property.format].whereType<String>().join(' ').toLowerCase();
+      return isInSelectedList && (query.isEmpty || searchableText.contains(query));
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final title = selectedTab == 0 ? 'Saved as Wishlist' : 'Interested';
+    final title = 'Interested';
     return Scaffold(
       backgroundColor: const Color(0xfffaf9f6),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 23,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+            child: Align(alignment: Alignment.centerLeft, child: Text(title, style: const TextStyle(color: AppColors.primary, fontSize: 23, fontWeight: FontWeight.w700))),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _tabs(),
-          ),
+
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
             child: TextField(
@@ -112,14 +83,8 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
                 hintText: 'Search $title properties',
                 filled: true,
                 fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(11),
-                  borderSide: const BorderSide(color: Color(0xffeeeae3)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(11),
-                  borderSide: const BorderSide(color: Color(0xffeeeae3)),
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(11), borderSide: const BorderSide(color: Color(0xffeeeae3))),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(11), borderSide: const BorderSide(color: Color(0xffeeeae3))),
               ),
             ),
           ),
@@ -130,15 +95,9 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
               child:
                   isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : filteredProperties.isEmpty
+                      : properties.isEmpty
                       ? _emptyState(title)
-                      : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                        itemCount: filteredProperties.length,
-                        itemBuilder:
-                            (context, index) =>
-                                _propertyCard(filteredProperties[index]),
-                      ),
+                      : ListView.builder(padding: const EdgeInsets.fromLTRB(16, 4, 16, 24), itemCount: properties.length, itemBuilder: (context, index) => _propertyCard(properties[index])),
             ),
           ),
         ],
@@ -149,16 +108,8 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
   Widget _tabs() {
     return Container(
       padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: const Color(0xffe8eeeb),
-        borderRadius: BorderRadius.circular(11),
-      ),
-      child: Row(
-        children: [
-          _tabButton('Saved as Wishlist', 0, Icons.bookmark_border),
-          _tabButton('Interested', 1, Icons.favorite_border),
-        ],
-      ),
+      decoration: BoxDecoration(color: const Color(0xffe8eeeb), borderRadius: BorderRadius.circular(11)),
+      child: Row(children: [_tabButton('Saved as Wishlist', 0, Icons.bookmark_border), _tabButton('Interested', 1, Icons.favorite_border)]),
     );
   }
 
@@ -173,30 +124,13 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
             }),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-          decoration: BoxDecoration(
-            color: selected ? AppColors.primary : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-          ),
+          decoration: BoxDecoration(color: selected ? AppColors.primary : Colors.transparent, borderRadius: BorderRadius.circular(8)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                size: 17,
-                color: selected ? Colors.white : AppColors.primary,
-              ),
+              Icon(icon, size: 17, color: selected ? Colors.white : AppColors.primary),
               const SizedBox(width: 5),
-              Flexible(
-                child: Text(
-                  label,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: selected ? Colors.white : AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+              Flexible(child: Text(label, overflow: TextOverflow.ellipsis, style: TextStyle(color: selected ? Colors.white : AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600))),
             ],
           ),
         ),
@@ -209,23 +143,13 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
         const SizedBox(height: 75),
-        Icon(
-          selectedTab == 0 ? Icons.bookmark_border : Icons.favorite_border,
-          size: 58,
-          color: AppColors.secondary,
-        ),
+        Icon(selectedTab == 0 ? Icons.bookmark_border : Icons.favorite_border, size: 58, color: AppColors.secondary),
         const SizedBox(height: 14),
         Center(
           child: Text(
-            searchController.text.isEmpty
-                ? 'No properties saved as $title yet'
-                : 'No $title properties match your search',
+            searchController.text.isEmpty ? 'No properties saved as $title yet' : 'No $title properties match your search',
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.primary,
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(color: AppColors.primary, fontSize: 17, fontWeight: FontWeight.w600),
           ),
         ),
       ],
@@ -233,15 +157,11 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
   }
 
   Widget _propertyCard(Data property) {
-    final imagePath =
-        property.media?.isNotEmpty == true ? property.media!.first.path : null;
+    final imagePath = property.media?.isNotEmpty == true ? property.media!.first.path : null;
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [BoxShadow(color: Color(0x0d000000), blurRadius: 7)],
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: const [BoxShadow(color: Color(0x0d000000), blurRadius: 7)]),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,52 +172,18 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
             child:
                 imagePath == null
                     ? Image.asset(AppIcons.icProperty, fit: BoxFit.cover)
-                    : CachedNetworkImage(
-                      imageUrl: '${AppEndpoints.imgUrl}$imagePath',
-                      fit: BoxFit.cover,
-                      errorWidget:
-                          (_, __, ___) => Image.asset(
-                            AppIcons.icProperty,
-                            fit: BoxFit.cover,
-                          ),
-                    ),
+                    : CachedNetworkImage(imageUrl: '${AppEndpoints.imgUrl}$imagePath', fit: BoxFit.cover, errorWidget: (_, __, ___) => Image.asset(AppIcons.icProperty, fit: BoxFit.cover)),
           ),
           Padding(
             padding: const EdgeInsets.all(13),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  property.title ?? 'Untitled property',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                Text(property.title ?? 'Untitled property', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 5),
-                Text(
-                  property.location ?? property.area ?? 'Location unavailable',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.gray500,
-                    fontSize: 13,
-                  ),
-                ),
+                Text(property.location ?? property.area ?? 'Location unavailable', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.gray500, fontSize: 13)),
                 const SizedBox(height: 8),
-                Text(
-                  property.price == null
-                      ? 'Price unavailable'
-                      : '₹${property.price}',
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                Text(property.price == null ? 'Price unavailable' : '₹${property.price}', style: const TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -312,11 +198,7 @@ class UserVisitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _UserEmptyScreen(
-      title: 'Visit',
-      icon: Icons.event_available_outlined,
-      message: 'Your scheduled property visits will appear here.',
-    );
+    return const _UserEmptyScreen(title: 'Visit', icon: Icons.event_available_outlined, message: 'Your scheduled property visits will appear here.');
   }
 }
 
@@ -325,11 +207,7 @@ class _UserEmptyScreen extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const _UserEmptyScreen({
-    required this.title,
-    required this.icon,
-    required this.message,
-  });
+  const _UserEmptyScreen({required this.title, required this.icon, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -343,11 +221,7 @@ class _UserEmptyScreen extends StatelessWidget {
             children: [
               Icon(icon, size: 56, color: AppColors.primary),
               const SizedBox(height: 16),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.gray500, fontSize: 15),
-              ),
+              Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.gray500, fontSize: 15)),
             ],
           ),
         ),
