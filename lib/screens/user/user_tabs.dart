@@ -147,6 +147,8 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
         const SizedBox(height: 14),
         Center(
           child: Text(
+
+            
             searchController.text.isEmpty ? 'No properties saved as $title yet' : 'No $title properties match your search',
             textAlign: TextAlign.center,
             style: const TextStyle(color: AppColors.primary, fontSize: 17, fontWeight: FontWeight.w600),
