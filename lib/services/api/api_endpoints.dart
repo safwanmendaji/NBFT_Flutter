@@ -34,7 +34,7 @@ class AppEndpoints {
   static String updateRequirement = "property/updateRequirement";
   static String createPaymentOrder = "payments/initiate";
   static String verifyPayment = "payments/verify";
-  static String myproperties = "interest/myproperties";
+  static String myproperties = "interest/app/myproperties";
   static const String razorpayKeyId = String.fromEnvironment(
     'RAZORPAY_KEY_ID',
     defaultValue: 'rzp_live_bmghTU3JLdsiP9',

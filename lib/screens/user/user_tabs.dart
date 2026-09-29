@@ -34,12 +34,88 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
     super.dispose();
   }
 
+  Future<void> _removeFromInterested(Data property) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              'Remove from Interested?',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+            content: Text(
+              '“${property.title ?? 'This property'}” will be removed from your interested list.',
+              style: const TextStyle(fontSize: 13, color: AppColors.gray500),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppColors.gray500),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text(
+                  'Remove',
+                  style: TextStyle(
+                    color: Color(0xFFD9534F),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+
+    if (confirmed != true) return;
+
+    // if (property.sId != null) {
+    //   final ids = UserPropertyStorage.ids(UserPropertyStorage.interestedKey);
+    //   ids.remove(property.sId);
+    //   await UserPropertyStorage.save(
+    //     UserPropertyStorage.interestedKey,
+    //     ids.toList(),
+    //   );
+    // }
+
+    if (mounted) {
+      setState(() {});
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Removed from interested'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  void _scheduleVisit(Data property) {
+    // showModalBottomSheet(
+    //   context: context,
+    //   backgroundColor: Colors.transparent,
+    //   isScrollControlled: true,
+    //   // builder: (_) => _scheduleVisitSheet(property: property),
+    // );
+  }
+
   Future<void> _loadProperties() async {
     try {
-      final response = await Propertyapis.getAllProperties(isShowProgress: false, context: context, id: Prefs.getString(LocalStrings.userid), params: {});
+      final response = await Propertyapis.getAllProperties(
+        isShowProgress: false,
+        context: context,
+        id: Prefs.getString(LocalStrings.userid),
+        params: {},
+      );
       if (mounted) {
         setState(() {
           properties = response.data ?? [];
+
           isLoading = false;
         });
       }
@@ -50,14 +126,25 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
 
   List<Data> get filteredProperties {
     final savedIds = UserPropertyStorage.ids(UserPropertyStorage.wishlistKey);
-    final interestedIds = UserPropertyStorage.ids(UserPropertyStorage.interestedKey);
+    final interestedIds = UserPropertyStorage.ids(
+      UserPropertyStorage.interestedKey,
+    );
     final selectedIds = selectedTab == 0 ? savedIds : interestedIds;
     final query = searchController.text.trim().toLowerCase();
 
     return properties.where((property) {
-      final isInSelectedList = property.sId != null && selectedIds.contains(property.sId);
-      final searchableText = [property.title, property.location, property.area, property.category, property.format].whereType<String>().join(' ').toLowerCase();
-      return isInSelectedList && (query.isEmpty || searchableText.contains(query));
+      final isInSelectedList =
+          property.sId != null && selectedIds.contains(property.sId);
+      final searchableText =
+          [
+            property.title,
+            property.location,
+            property.area,
+            property.category,
+            property.format,
+          ].whereType<String>().join(' ').toLowerCase();
+      return isInSelectedList &&
+          (query.isEmpty || searchableText.contains(query));
     }).toList();
   }
 
@@ -70,7 +157,17 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
-            child: Align(alignment: Alignment.centerLeft, child: Text(title, style: const TextStyle(color: AppColors.primary, fontSize: 23, fontWeight: FontWeight.w700))),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 23,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
           ),
 
           Padding(
@@ -83,8 +180,14 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
                 hintText: 'Search $title properties',
                 filled: true,
                 fillColor: Colors.white,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(11), borderSide: const BorderSide(color: Color(0xffeeeae3))),
-                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(11), borderSide: const BorderSide(color: Color(0xffeeeae3))),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: const BorderSide(color: Color(0xffeeeae3)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: const BorderSide(color: Color(0xffeeeae3)),
+                ),
               ),
             ),
           ),
@@ -97,7 +200,13 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
                       ? const Center(child: CircularProgressIndicator())
                       : properties.isEmpty
                       ? _emptyState(title)
-                      : ListView.builder(padding: const EdgeInsets.fromLTRB(16, 4, 16, 24), itemCount: properties.length, itemBuilder: (context, index) => _propertyCard(properties[index])),
+                      : ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                        itemCount: properties.length,
+                        itemBuilder:
+                            (context, index) =>
+                                _propertyCard(properties[index]),
+                      ),
             ),
           ),
         ],
@@ -108,8 +217,16 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
   Widget _tabs() {
     return Container(
       padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: const Color(0xffe8eeeb), borderRadius: BorderRadius.circular(11)),
-      child: Row(children: [_tabButton('Saved as Wishlist', 0, Icons.bookmark_border), _tabButton('Interested', 1, Icons.favorite_border)]),
+      decoration: BoxDecoration(
+        color: const Color(0xffe8eeeb),
+        borderRadius: BorderRadius.circular(11),
+      ),
+      child: Row(
+        children: [
+          _tabButton('Saved as Wishlist', 0, Icons.bookmark_border),
+          _tabButton('Interested', 1, Icons.favorite_border),
+        ],
+      ),
     );
   }
 
@@ -124,13 +241,30 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
             }),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-          decoration: BoxDecoration(color: selected ? AppColors.primary : Colors.transparent, borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 17, color: selected ? Colors.white : AppColors.primary),
+              Icon(
+                icon,
+                size: 17,
+                color: selected ? Colors.white : AppColors.primary,
+              ),
               const SizedBox(width: 5),
-              Flexible(child: Text(label, overflow: TextOverflow.ellipsis, style: TextStyle(color: selected ? Colors.white : AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600))),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: selected ? Colors.white : AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -143,13 +277,23 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
         const SizedBox(height: 75),
-        Icon(selectedTab == 0 ? Icons.bookmark_border : Icons.favorite_border, size: 58, color: AppColors.secondary),
+        Icon(
+          selectedTab == 0 ? Icons.bookmark_border : Icons.favorite_border,
+          size: 58,
+          color: AppColors.secondary,
+        ),
         const SizedBox(height: 14),
         Center(
           child: Text(
-            searchController.text.isEmpty ? 'No properties saved as $title yet' : 'No $title properties match your search',
+            searchController.text.isEmpty
+                ? 'No properties saved as $title yet'
+                : 'No $title properties match your search',
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.primary, fontSize: 17, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+              color: AppColors.primary,
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
@@ -157,33 +301,154 @@ class _UserInterestedScreenState extends State<UserInterestedScreen> {
   }
 
   Widget _propertyCard(Data property) {
-    final imagePath = property.media?.isNotEmpty == true ? property.media!.first.path : null;
-    
+    print(property.toJson());
+    final imagePath =
+        property.media?.isNotEmpty == true ? property.media!.first.path : null;
+    final isImage =
+        property.media?.isNotEmpty == true &&
+        property.media!.first.type == 'image';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: const [BoxShadow(color: Color(0x0d000000), blurRadius: 7)]),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [BoxShadow(color: Color(0x0d000000), blurRadius: 7)],
+      ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ----------------- Image -----------------
           SizedBox(
             height: 150,
             width: double.infinity,
             child:
-                imagePath == null
+                imagePath == null || !isImage
                     ? Image.asset(AppIcons.icProperty, fit: BoxFit.cover)
-                    : CachedNetworkImage(imageUrl: '${AppEndpoints.imgUrl}$imagePath', fit: BoxFit.cover, errorWidget: (_, __, ___) => Image.asset(AppIcons.icProperty, fit: BoxFit.cover)),
+                    : CachedNetworkImage(
+                      imageUrl: '${AppEndpoints.imgUrl}$imagePath',
+                      fit: BoxFit.cover,
+                      placeholder:
+                          (_, __) => Container(color: const Color(0xFFEDF0F1)),
+                      errorWidget:
+                          (_, __, ___) => Image.asset(
+                            AppIcons.icProperty,
+                            fit: BoxFit.cover,
+                          ),
+                    ),
           ),
+
+          // ----------------- Details -----------------
           Padding(
             padding: const EdgeInsets.all(13),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(property.title ?? 'Untitled property', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w700)),
+                Text(
+                  property.title ?? 'Untitled property',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 const SizedBox(height: 5),
-                Text(property.location ?? property.area ?? 'Location unavailable', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.gray500, fontSize: 13)),
+                Text(
+                  property.location ?? property.area ?? 'Location unavailable',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.gray500,
+                    fontSize: 13,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                Text(property.price == null ? 'Price unavailable' : '₹${property.price}', style: const TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.w700)),
+                Text(
+                  property.price == null
+                      ? 'Price unavailable'
+                      : '₹${property.price}',
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                // ----------------- Action Buttons -----------------
+                Row(
+                  children: [
+                    // Remove from Interest
+                    Expanded(
+                      child: SizedBox(
+                        height: 42,
+                        child: OutlinedButton.icon(
+                          onPressed: () => _removeFromInterested(property),
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            size: 17,
+                          ),
+                          label: const Text(
+                            'Remove from Interest',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFFD9534F),
+                            side: const BorderSide(
+                              color: Color(0xFFD9534F),
+                              width: 1.2,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+
+                    // Schedule Visit
+                    Expanded(
+                      child: SizedBox(
+                        height: 42,
+                        child: ElevatedButton.icon(
+                          onPressed: () => _scheduleVisit(property),
+                          icon: const Icon(
+                            Icons.event_available_rounded,
+                            size: 17,
+                          ),
+                          label: const Text(
+                            'Schedule Visit',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -198,7 +463,11 @@ class UserVisitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _UserEmptyScreen(title: 'Visit', icon: Icons.event_available_outlined, message: 'Your scheduled property visits will appear here.');
+    return const _UserEmptyScreen(
+      title: 'Visit',
+      icon: Icons.event_available_outlined,
+      message: 'Your scheduled property visits will appear here.',
+    );
   }
 }
 
@@ -207,7 +476,11 @@ class _UserEmptyScreen extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const _UserEmptyScreen({required this.title, required this.icon, required this.message});
+  const _UserEmptyScreen({
+    required this.title,
+    required this.icon,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +494,11 @@ class _UserEmptyScreen extends StatelessWidget {
             children: [
               Icon(icon, size: 56, color: AppColors.primary),
               const SizedBox(height: 16),
-              Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.gray500, fontSize: 15)),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.gray500, fontSize: 15),
+              ),
             ],
           ),
         ),
