@@ -66,8 +66,7 @@ class MyPropertyDetails extends StatefulWidget {
   State<MyPropertyDetails> createState() => _MyPropertyDetailsState();
 }
 
-class _MyPropertyDetailsState extends State<MyPropertyDetails>
-    with SingleTickerProviderStateMixin {
+class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
 
@@ -77,17 +76,9 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat(reverse: true);
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
 
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0, 0),
-      end: const Offset(0, -0.08),
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _offsetAnimation = Tween<Offset>(begin: const Offset(0, 0), end: const Offset(0, -0.08)).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -105,12 +96,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
         final file = File(tempVideoPath);
         await file.writeAsBytes(response.bodyBytes);
 
-        final uint8list = await VideoThumbnail.thumbnailData(
-          video: tempVideoPath,
-          imageFormat: ImageFormat.PNG,
-          maxHeight: 400,
-          quality: 50,
-        );
+        final uint8list = await VideoThumbnail.thumbnailData(video: tempVideoPath, imageFormat: ImageFormat.PNG, maxHeight: 400, quality: 50);
         return uint8list;
       } else {
         log('Failed to download video');
@@ -125,17 +111,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
   // ------------------------------------------------------------------ HELPERS
 
   Widget _defaultImage({double? height, double? width}) {
-    return Container(
-      height: height,
-      width: width,
-      color: const Color(0xFFEDF1F0),
-      alignment: Alignment.center,
-      child: const Icon(
-        Icons.apartment_rounded,
-        size: 64,
-        color: AppColors.primary,
-      ),
-    );
+    return Container(height: height, width: width, color: const Color(0xFFEDF1F0), alignment: Alignment.center, child: const Icon(Icons.apartment_rounded, size: 64, color: AppColors.primary));
   }
 
   String get _formattedPrice {
@@ -150,43 +126,12 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
   @override
   Widget build(BuildContext context) {
     specification = [
-      {
-        'icon': AppIcons.icBothSideArrow,
-        'title': 'Size',
-        'isicon': false,
-        'subtitle':
-            _isEmpty(widget.size) ? '-' : "${widget.size} ${widget.sizetype}",
-      },
-      {
-        'icon': Icons.bed_outlined,
-        'title': 'BHK',
-        'isicon': true,
-        'subtitle': _isEmpty(widget.format) ? '-' : widget.format,
-      },
-      {
-        'icon': AppIcons.icCategory,
-        'title': 'Category',
-        'isicon': false,
-        'subtitle': _isEmpty(widget.category) ? '-' : widget.category,
-      },
-      {
-        'icon': Icons.area_chart_outlined,
-        'title': 'Area',
-        'isicon': true,
-        'subtitle': _isEmpty(widget.area) ? '-' : widget.area,
-      },
-      {
-        'icon': Icons.home_outlined,
-        'title': 'Floor',
-        'isicon': true,
-        'subtitle': _isEmpty(widget.floor) ? '-' : widget.floor,
-      },
-      {
-        'icon': Icons.chair_outlined,
-        'title': 'Furnished',
-        'isicon': true,
-        'subtitle': _isEmpty(widget.furnished) ? '-' : widget.furnished,
-      },
+      {'icon': AppIcons.icBothSideArrow, 'title': 'Size', 'isicon': false, 'subtitle': _isEmpty(widget.size) ? '-' : "${widget.size} ${widget.sizetype}"},
+      {'icon': Icons.bed_outlined, 'title': 'BHK', 'isicon': true, 'subtitle': _isEmpty(widget.format) ? '-' : widget.format},
+      {'icon': AppIcons.icCategory, 'title': 'Category', 'isicon': false, 'subtitle': _isEmpty(widget.category) ? '-' : widget.category},
+      {'icon': Icons.area_chart_outlined, 'title': 'Area', 'isicon': true, 'subtitle': _isEmpty(widget.area) ? '-' : widget.area},
+      {'icon': Icons.home_outlined, 'title': 'Floor', 'isicon': true, 'subtitle': _isEmpty(widget.floor) ? '-' : widget.floor},
+      {'icon': Icons.chair_outlined, 'title': 'Furnished', 'isicon': true, 'subtitle': _isEmpty(widget.furnished) ? '-' : widget.furnished},
     ];
 
     return Scaffold(
@@ -259,11 +204,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black.withValues(alpha: 0.28),
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.35),
-                          ],
+                          colors: [Colors.black.withValues(alpha: 0.28), Colors.transparent, Colors.black.withValues(alpha: 0.35)],
                           stops: const [0.0, 0.5, 1.0],
                         ),
                       ),
@@ -277,22 +218,9 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
                   top: 12,
                   right: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.55),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '${_currentIndex + 1} / ${widget.images.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.55), borderRadius: BorderRadius.circular(20)),
+                    child: Text('${_currentIndex + 1} / ${widget.images.length}', style: const TextStyle(color: Colors.white, fontSize: 11.5, fontWeight: FontWeight.w600)),
                   ),
                 ),
 
@@ -302,23 +230,9 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
                   top: 12,
                   left: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      widget.type.toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.5,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(20)),
+                    child: Text(widget.type.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 10.5, letterSpacing: 0.5, fontWeight: FontWeight.w700)),
                   ),
                 ),
 
@@ -330,9 +244,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
                     dotsCount: widget.images.length,
                     position: _currentIndex.toDouble(),
                     decorator: DotsDecorator(
-                      activeShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
+                      activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
                       size: const Size(8.0, 8.0),
                       activeSize: const Size(22.0, 8.0),
                       color: Colors.white.withValues(alpha: 0.5),
@@ -360,14 +272,8 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
         height: 260,
         width: double.infinity,
         fit: BoxFit.cover,
-        placeholder:
-            (context, url) => Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(height: 260, color: Colors.grey),
-            ),
-        errorWidget:
-            (_, __, ___) => _defaultImage(height: 260, width: double.infinity),
+        placeholder: (context, url) => Shimmer.fromColors(baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!, child: Container(height: 260, color: Colors.grey)),
+        errorWidget: (_, __, ___) => _defaultImage(height: 260, width: double.infinity),
       );
     }
 
@@ -379,43 +285,19 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
           if (snapshot.hasData && snapshot.data != null) {
             return Stack(
               children: [
-                Image.memory(
-                  snapshot.data!,
-                  height: 260,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                Image.memory(snapshot.data!, height: 260, width: double.infinity, fit: BoxFit.cover),
                 Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => NewVideoPlay(
-                                  type: 'url',
-                                  pathh: "${AppEndpoints.imgUrl}$path",
-                                ),
-                          ),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => NewVideoPlay(type: 'url', pathh: "${AppEndpoints.imgUrl}$path")));
                       },
                       child: Container(
                         height: 62,
                         width: 62,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          shape: BoxShape.circle,
-                          boxShadow: const [
-                            BoxShadow(color: Color(0x33000000), blurRadius: 14),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.play_arrow_rounded,
-                          size: 38,
-                          color: AppColors.primary,
-                        ),
+                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle, boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 14)]),
+                        child: const Icon(Icons.play_arrow_rounded, size: 38, color: AppColors.primary),
                       ),
                     ),
                   ),
@@ -425,11 +307,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
           }
           return _defaultImage(height: 260, width: double.infinity);
         }
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(height: 260, color: Colors.grey),
-        );
+        return Shimmer.fromColors(baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!, child: Container(height: 260, color: Colors.grey));
       },
     );
   }
@@ -442,86 +320,37 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x0F000000),
-              blurRadius: 14,
-              offset: Offset(0, 6),
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 6))]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _isEmpty(widget.companyname)
-                  ? 'Untitled Property'
-                  : widget.companyname,
+              _isEmpty(widget.companyname) ? 'Untitled Property' : widget.companyname,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: AppColors.blackColor,
-                height: 1.3,
-              ),
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.blackColor, height: 1.3),
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF4E5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(color: const Color(0xFFFFF4E5), borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.currency_rupee_rounded,
-                        size: 15,
-                        color: AppColors.secondary,
-                      ),
+                      const Icon(Icons.currency_rupee_rounded, size: 15, color: AppColors.secondary),
                       const SizedBox(width: 2),
-                      Text(
-                        '$_formattedPrice /-',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.secondary,
-                        ),
-                      ),
+                      Text('$_formattedPrice /-', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.secondary)),
                     ],
                   ),
                 ),
                 const Spacer(),
                 if (!_isEmpty(widget.negotiable))
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE7F1EF),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      widget.negotiable.toLowerCase() == 'yes'
-                          ? 'Negotiable'
-                          : 'Fixed Price',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
-                      ),
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(color: const Color(0xFFE7F1EF), borderRadius: BorderRadius.circular(20)),
+                    child: Text(widget.negotiable.toLowerCase() == 'yes' ? 'Negotiable' : 'Fixed Price', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primary)),
                   ),
               ],
             ),
@@ -539,17 +368,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x0A000000),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -561,29 +380,14 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
                 Container(
                   height: 34,
                   width: 34,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE7F1EF),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.place_outlined,
-                    size: 18,
-                    color: AppColors.primary,
-                  ),
+                  decoration: BoxDecoration(color: const Color(0xFFE7F1EF), borderRadius: BorderRadius.circular(10)),
+                  child: const Icon(Icons.place_outlined, size: 18, color: AppColors.primary),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      _isEmpty(widget.address) ? '-' : widget.address,
-                      style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.blackColor,
-                        height: 1.45,
-                      ),
-                    ),
+                    child: Text(_isEmpty(widget.address) ? '-' : widget.address, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: AppColors.blackColor, height: 1.45)),
                   ),
                 ),
               ],
@@ -602,32 +406,15 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x0A000000),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _sectionLabel(Icons.description_outlined, 'Description'),
             const SizedBox(height: 10),
             Text(
-              _isEmpty(widget.description)
-                  ? 'No description provided.'
-                  : widget.description,
-              style: const TextStyle(
-                fontSize: 13.5,
-                fontWeight: FontWeight.w500,
-                color: AppColors.blackColor,
-                height: 1.55,
-              ),
+              _isEmpty(widget.description) ? 'No description provided.' : widget.description,
+              style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: AppColors.blackColor, height: 1.55),
             ),
           ],
         ),
@@ -637,18 +424,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
 
   Widget _sectionLabel(IconData icon, String label) {
     return Row(
-      children: [
-        Icon(icon, size: 17, color: AppColors.primary),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14.5,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
-          ),
-        ),
-      ],
+      children: [Icon(icon, size: 17, color: AppColors.primary), const SizedBox(width: 6), Text(label, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: AppColors.primary))],
     );
   }
 
@@ -669,12 +445,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
             itemBuilder: (BuildContext context, int index) {
               return _specCard(specification[index]);
             },
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisExtent: 140,
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 14,
-            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisExtent: 140, mainAxisSpacing: 14, crossAxisSpacing: 14),
           ),
         ],
       ),
@@ -688,13 +459,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFEDF0F1)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x07000000),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Color(0x07000000), blurRadius: 10, offset: Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -704,48 +469,19 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
             child: Container(
               height: 40,
               width: 40,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE7F1EF),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFFE7F1EF), borderRadius: BorderRadius.circular(12)),
               child: Center(
                 child:
                     spec['isicon'] == true
-                        ? Icon(
-                          spec['icon'] as IconData,
-                          size: 20,
-                          color: AppColors.primary,
-                        )
-                        : Image.asset(
-                          spec['icon'] as String,
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.contain,
-                          color: AppColors.primary,
-                        ),
+                        ? Icon(spec['icon'] as IconData, size: 20, color: AppColors.primary)
+                        : Image.asset(spec['icon'] as String, height: 20, width: 20, fit: BoxFit.contain, color: AppColors.primary),
               ),
             ),
           ),
           const Spacer(),
-          Text(
-            spec['title'] as String,
-            style: const TextStyle(
-              fontSize: 11.5,
-              color: AppColors.gray500,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Text(spec['title'] as String, style: const TextStyle(fontSize: 11.5, color: AppColors.gray500, fontWeight: FontWeight.w500)),
           const SizedBox(height: 2),
-          Text(
-            '${spec['subtitle']}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.blackColor,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          Text('${spec['subtitle']}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -796,14 +532,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
             label: 'Customer Details',
             filled: false,
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) =>
-                          MyCustomerDetails(propertyId: widget.propertyid),
-                ),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyCustomerDetails(propertyId: widget.propertyid)));
             },
           ),
         ],
@@ -811,12 +540,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
     );
   }
 
-  Widget _actionButton({
-    required String icon,
-    required String label,
-    required VoidCallback onTap,
-    required bool filled,
-  }) {
+  Widget _actionButton({required String icon, required String label, required VoidCallback onTap, required bool filled}) {
     final bg = filled ? AppColors.secondary : AppColors.white;
     final fg = filled ? AppColors.white : AppColors.secondary;
 
@@ -830,13 +554,8 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
           foregroundColor: fg,
           elevation: filled ? 3 : 0,
           shadowColor: filled ? const Color(0x33DFA24A) : null,
-          side:
-              filled
-                  ? null
-                  : const BorderSide(color: Color(0xFFDFA24A), width: 1.2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(26),
-          ),
+          side: filled ? null : const BorderSide(color: Color(0xFFDFA24A), width: 1.2),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -848,23 +567,11 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails>
                 icon,
                 fit: BoxFit.contain,
                 color: filled ? AppColors.white : AppColors.secondary,
-                errorBuilder:
-                    (_, __, ___) => Icon(
-                      filled ? Icons.edit_outlined : Icons.person_outline,
-                      size: 20,
-                      color: filled ? AppColors.white : AppColors.secondary,
-                    ),
+                errorBuilder: (_, __, ___) => Icon(filled ? Icons.edit_outlined : Icons.person_outline, size: 20, color: filled ? AppColors.white : AppColors.secondary),
               ),
             ),
             const SizedBox(width: 12),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: fg,
-              ),
-            ),
+            Text(label, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: fg)),
           ],
         ),
       ),

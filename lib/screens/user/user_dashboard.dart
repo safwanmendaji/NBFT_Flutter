@@ -30,6 +30,10 @@ class _UserHomeDashboardState extends State<UserHomeDashboard> {
   @override
   void initState() {
     super.initState();
+    initCall();
+  }
+
+  initCall() async {
     _loadProperties();
     _loadSubscription();
   }
@@ -41,6 +45,7 @@ class _UserHomeDashboardState extends State<UserHomeDashboard> {
   }
 
   Future<void> _loadProperties() async {
+    print("_loadProperties");
     try {
       final response = await Propertyapis.getSharedProperties(context: context, userId: Prefs.getString(LocalStrings.userid));
       if (!mounted) return;
@@ -54,6 +59,7 @@ class _UserHomeDashboardState extends State<UserHomeDashboard> {
       if (mounted) setState(() => isLoading = false);
     }
   }
+
 
   Future<void> _loadSubscription() async {
     try {
@@ -148,7 +154,7 @@ class _UserHomeDashboardState extends State<UserHomeDashboard> {
                     const SizedBox(height: 24),
                     _suggestedHeading(),
                     const SizedBox(height: 14),
-                    _propertyList(),
+                    _propertyList(_loadProperties),
                   ],
                 ),
               ),
@@ -277,7 +283,7 @@ class _UserHomeDashboardState extends State<UserHomeDashboard> {
     );
   }
 
-  Widget _propertyList() {
+  Widget _propertyList(Function onRefresh) {
     if (isLoading) {
       return const Padding(padding: EdgeInsets.symmetric(vertical: 48), child: Center(child: CircularProgressIndicator()));
     }
@@ -299,16 +305,34 @@ class _UserHomeDashboardState extends State<UserHomeDashboard> {
         ),
       );
     }
-    return Column(children: visibleProperties.take(6).map(_propertyCard).toList());
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: properties.length,
+      itemBuilder: (context, index) {
+        final data = properties[index];
+        return _propertyCard(data, onRefresh);
+      },
+    );
+    //return Column(children: visibleProperties.take(6).map(_propertyCard).toList());
   }
 
-  Widget _propertyCard(Data property) {
+  Widget _propertyCard(Data property, Function onRefresh) {
     final imagePath = property.media?.isNotEmpty == true ? property.media!.first.path : null;
     final title = property.title ?? 'Untitled property';
     final location = property.location ?? property.area ?? 'Location unavailable';
     final price = property.price == null ? 'Price unavailable' : '₹${property.price}';
     return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => UserPropertyDetails(property: property))),
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) {
+              return UserPropertyDetails(property: property);
+            },
+          ),
+        );
+        onRefresh();
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(13), boxShadow: const [BoxShadow(color: Color(0x0d000000), blurRadius: 8)]),

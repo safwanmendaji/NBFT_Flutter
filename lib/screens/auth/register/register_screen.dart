@@ -4,16 +4,16 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
- import 'package:flutter_nobrokeragefortenants/core/extensions/string_extension.dart';
- import 'package:flutter_nobrokeragefortenants/core/dialogs/customize_alert_dialog.dart';
- import 'package:flutter_nobrokeragefortenants/core/constants/app_constants.dart';
- import 'package:flutter_nobrokeragefortenants/screens/auth/otp/otp_screen.dart';
- import 'package:flutter_nobrokeragefortenants/services/api/auth_api.dart';
- import 'package:flutter_nobrokeragefortenants/services/network/error_manager.dart';
+import 'package:flutter_nobrokeragefortenants/core/extensions/string_extension.dart';
+import 'package:flutter_nobrokeragefortenants/core/dialogs/customize_alert_dialog.dart';
+import 'package:flutter_nobrokeragefortenants/core/constants/app_constants.dart';
+import 'package:flutter_nobrokeragefortenants/screens/auth/otp/otp_screen.dart';
+import 'package:flutter_nobrokeragefortenants/services/api/auth_api.dart';
+import 'package:flutter_nobrokeragefortenants/services/network/error_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
- import 'package:flutter_nobrokeragefortenants/core/constants/app_colors.dart';
- import 'package:flutter_nobrokeragefortenants/core/constants/app_images.dart' show AppIcons;
+import 'package:flutter_nobrokeragefortenants/core/constants/app_colors.dart';
+import 'package:flutter_nobrokeragefortenants/core/constants/app_images.dart' show AppIcons;
 
 class MyRegisterScreen extends StatefulWidget {
   final String role;
@@ -24,8 +24,7 @@ class MyRegisterScreen extends StatefulWidget {
   State<MyRegisterScreen> createState() => _MyRegisterScreenState();
 }
 
-class _MyRegisterScreenState extends State<MyRegisterScreen>
-    with TickerProviderStateMixin {
+class _MyRegisterScreenState extends State<MyRegisterScreen> with TickerProviderStateMixin {
   final _fomrkey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _addressController = TextEditingController();
@@ -44,14 +43,8 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
   @override
   void initState() {
     super.initState();
-    _floatController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..repeat(reverse: true);
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
+    _floatController = AnimationController(vsync: this, duration: const Duration(seconds: 5))..repeat(reverse: true);
+    _pulseController = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat(reverse: true);
     if (widget.role == 'user') _loadBrokers();
   }
 
@@ -97,15 +90,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
         .then((response) {
           if (response.statusCode == 200 || response.statusCode == 201) {
             log("Api Success");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => MyOtpScreen(
-                      mobileNumber: _mobileController.text.toString(),
-                    ),
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyOtpScreen(mobileNumber: _mobileController.text.toString())));
           } else {
             log("Api failed");
             customizedAlertDialogue(
@@ -183,12 +168,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
         // Base gradient
         Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [Color(0xFF1A3E39), Color(0xFF265953), Color(0xFF1C4540)],
-              stops: [0.0, 0.5, 1.0],
-            ),
+            gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: [Color(0xFF1A3E39), Color(0xFF265953), Color(0xFF1C4540)], stops: [0.0, 0.5, 1.0]),
           ),
         ),
 
@@ -200,22 +180,11 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
             animation: _floatController,
             builder:
                 (_, __) => Transform.translate(
-                  offset: Offset(
-                    8 * math.sin(_floatController.value * math.pi),
-                    12 * math.cos(_floatController.value * math.pi),
-                  ),
+                  offset: Offset(8 * math.sin(_floatController.value * math.pi), 12 * math.cos(_floatController.value * math.pi)),
                   child: Container(
                     width: 280,
                     height: 280,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          AppColors.secondary.withOpacity(0.15),
-                          AppColors.secondary.withOpacity(0.0),
-                        ],
-                      ),
-                    ),
+                    decoration: BoxDecoration(shape: BoxShape.circle, gradient: RadialGradient(colors: [AppColors.secondary.withOpacity(0.15), AppColors.secondary.withOpacity(0.0)])),
                   ),
                 ),
           ),
@@ -233,15 +202,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
                   child: Container(
                     width: 200,
                     height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          AppColors.secondary.withOpacity(0.10),
-                          AppColors.secondary.withOpacity(0.0),
-                        ],
-                      ),
-                    ),
+                    decoration: BoxDecoration(shape: BoxShape.circle, gradient: RadialGradient(colors: [AppColors.secondary.withOpacity(0.10), AppColors.secondary.withOpacity(0.0)])),
                   ),
                 ),
           ),
@@ -254,15 +215,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
           right: 0,
           child: Container(
             height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.secondary.withOpacity(0.0),
-                  AppColors.secondary.withOpacity(0.10),
-                  AppColors.secondary.withOpacity(0.0),
-                ],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: LinearGradient(colors: [AppColors.secondary.withOpacity(0.0), AppColors.secondary.withOpacity(0.10), AppColors.secondary.withOpacity(0.0)])),
           ),
         ),
       ],
@@ -277,43 +230,19 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
         children: [
           // Back button
           GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.white.withOpacity(0.15),
-                      width: 1,
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 16,
-                    color: AppColors.white,
-                  ),
-                ),
-              )
-              .animate()
-              .fade(duration: 500.ms)
-              .slideX(begin: -0.3, curve: Curves.easeOut),
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(color: AppColors.white.withOpacity(0.08), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.white.withOpacity(0.15), width: 1)),
+              child: const Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: AppColors.white),
+            ),
+          ).animate().fade(duration: 500.ms).slideX(begin: -0.3, curve: Curves.easeOut),
 
           // Logo centered
           Expanded(
-                child: Center(
-                  child: Image.asset(
-                    AppIcons.icApp,
-                    height: 48,
-                    width: 140,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              )
-              .animate()
-              .fade(duration: 700.ms)
-              .slideY(begin: -0.3, curve: Curves.easeOut),
+            child: Center(child: Image.asset(AppIcons.icApp, height: 48, width: 140, fit: BoxFit.contain, color: AppColors.white)),
+          ).animate().fade(duration: 700.ms).slideY(begin: -0.3, curve: Curves.easeOut),
 
           // Spacer to balance the back button
           const SizedBox(width: 40),
@@ -328,46 +257,19 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-              children: [
-                Container(
-                  width: 3,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: AppColors.secondary,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'CREATE ACCOUNT',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.secondary.withOpacity(0.85),
-                    letterSpacing: 3.0,
-                  ),
-                ),
-              ],
-            )
-            .animate(delay: 150.ms)
-            .fade(duration: 600.ms)
-            .slideX(begin: -0.2, curve: Curves.easeOut),
+          children: [
+            Container(width: 3, height: 16, decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(2))),
+            const SizedBox(width: 10),
+            Text('CREATE ACCOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.secondary.withOpacity(0.85), letterSpacing: 3.0)),
+          ],
+        ).animate(delay: 150.ms).fade(duration: 600.ms).slideX(begin: -0.2, curve: Curves.easeOut),
 
         const SizedBox(height: 10),
 
         Text(
-              'Join us &\nfind your home',
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
-                color: AppColors.white,
-                height: 1.18,
-                letterSpacing: -0.5,
-              ),
-            )
-            .animate(delay: 250.ms)
-            .fade(duration: 600.ms)
-            .slideX(begin: -0.2, curve: Curves.easeOut),
+          'Join us &\nfind your home',
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: AppColors.white, height: 1.18, letterSpacing: -0.5),
+        ).animate(delay: 250.ms).fade(duration: 600.ms).slideX(begin: -0.2, curve: Curves.easeOut),
       ],
     );
   }
@@ -379,18 +281,8 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
         color: AppColors.white,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.28),
-            blurRadius: 48,
-            spreadRadius: 0,
-            offset: const Offset(0, 24),
-          ),
-          BoxShadow(
-            color: AppColors.secondary.withOpacity(0.07),
-            blurRadius: 16,
-            spreadRadius: 0,
-            offset: const Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.black.withOpacity(0.28), blurRadius: 48, spreadRadius: 0, offset: const Offset(0, 24)),
+          BoxShadow(color: AppColors.secondary.withOpacity(0.07), blurRadius: 16, spreadRadius: 0, offset: const Offset(0, 4)),
         ],
       ),
       child: ClipRRect(
@@ -401,38 +293,23 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Gold → teal accent bar
-              Container(
-                height: 4,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.secondary, AppColors.primary],
-                  ),
-                ),
-              ),
+              //              Container(height: 4, decoration: const BoxDecoration(gradient: LinearGradient(colors: [AppColors.secondary, AppColors.primary]))),
 
               // ── Step indicator ────────────────────────────────────
               _buildStepIndicator(),
 
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
+                padding: const EdgeInsets.fromLTRB(24, 20, 20, 28),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ─── Section: Personal Info ─────────────────────
-                    _buildSectionLabel(
-                      icon: Icons.person_outline_rounded,
-                      label: 'Personal Information',
-                    ),
+                    _buildSectionLabel(icon: Icons.person_outline_rounded, label: 'Personal Information'),
                     const SizedBox(height: 16),
 
                     _buildInputLabel('Full Name'),
                     const SizedBox(height: 7),
-                    _buildPremiumTextField(
-                      controller: _fullNameController,
-                      hint: 'Enter your full name',
-                      icon: Icons.badge_outlined,
-                      validation: (v) => v!.validateFullName(context),
-                    ),
+                    _buildPremiumTextField(controller: _fullNameController, hint: 'Enter your full name', icon: Icons.badge_outlined, validation: (v) => v!.validateFullName(context)),
 
                     const SizedBox(height: 18),
                     _buildInputLabel('Mobile Number'),
@@ -503,10 +380,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
                     const SizedBox(height: 24),
 
                     // ─── Section: Security ──────────────────────────
-                    _buildSectionLabel(
-                      icon: Icons.shield_outlined,
-                      label: 'Security',
-                    ),
+                    _buildSectionLabel(icon: Icons.shield_outlined, label: 'Security'),
                     const SizedBox(height: 16),
 
                     _buildInputLabel('Password'),
@@ -518,10 +392,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
                       obscure: _obscureText,
                       isPassword: true,
                       errorMaxLine: 2,
-                      suffixIcon:
-                          _obscureText
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                      suffixIcon: _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                       onSuffixTap: _togglePassword,
                       validation: (v) => v?.validatePassword(context),
                     ),
@@ -552,24 +423,12 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Container(height: 1, color: AppColors.bordercolor),
-                    ),
+                    Expanded(child: Container(height: 1, color: AppColors.bordercolor)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Text(
-                        'OR',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.darkgreycolor,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
+                      child: Text('OR', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.darkgreycolor, letterSpacing: 1.5)),
                     ),
-                    Expanded(
-                      child: Container(height: 1, color: AppColors.bordercolor),
-                    ),
+                    Expanded(child: Container(height: 1, color: AppColors.bordercolor)),
                   ],
                 ),
               ),
@@ -585,15 +444,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
   Widget _buildStepIndicator() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.lightgreen.withOpacity(0.5),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.bordercolor.withOpacity(0.5),
-            width: 1,
-          ),
-        ),
-      ),
+      decoration: BoxDecoration(color: AppColors.lightgreen.withOpacity(0.5), border: Border(bottom: BorderSide(color: AppColors.bordercolor.withOpacity(0.5), width: 1))),
       child: Row(
         children: [
           _buildStepDot(step: '1', label: 'Details', isActive: true),
@@ -606,40 +457,17 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
     );
   }
 
-  Widget _buildStepDot({
-    required String step,
-    required String label,
-    required bool isActive,
-  }) {
+  Widget _buildStepDot({required String step, required String label, required bool isActive}) {
     return Column(
       children: [
         Container(
           width: 28,
           height: 28,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isActive ? AppColors.primary : AppColors.bordercolor,
-          ),
-          child: Center(
-            child: Text(
-              step,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: isActive ? AppColors.secondary : AppColors.white,
-              ),
-            ),
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: isActive ? AppColors.primary : AppColors.bordercolor),
+          child: Center(child: Text(step, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: isActive ? AppColors.secondary : AppColors.white))),
         ),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-            color: isActive ? AppColors.primary : AppColors.darkgreycolor,
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 10, fontWeight: isActive ? FontWeight.w600 : FontWeight.w400, color: isActive ? AppColors.primary : AppColors.darkgreycolor)),
       ],
     );
   }
@@ -649,14 +477,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
       child: Container(
         height: 1.5,
         margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors:
-                isActive
-                    ? [AppColors.primary, AppColors.secondary]
-                    : [AppColors.bordercolor, AppColors.bordercolor],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: LinearGradient(colors: isActive ? [AppColors.primary, AppColors.secondary] : [AppColors.bordercolor, AppColors.bordercolor])),
       ),
     );
   }
@@ -668,22 +489,11 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
         Container(
           width: 32,
           height: 32,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(8),
-          ),
+          decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(8)),
           child: Icon(icon, size: 16, color: AppColors.primary),
         ),
         const SizedBox(width: 10),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.darkblack,
-            letterSpacing: 0.2,
-          ),
-        ),
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.darkblack, letterSpacing: 0.2)),
       ],
     );
   }
@@ -694,15 +504,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
         Expanded(child: Container(height: 1, color: AppColors.bordercolor)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            'Security Setup',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: AppColors.darkgreycolor,
-              letterSpacing: 0.5,
-            ),
-          ),
+          child: Text('Security Setup', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.darkgreycolor, letterSpacing: 0.5)),
         ),
         Expanded(child: Container(height: 1, color: AppColors.bordercolor)),
       ],
@@ -710,15 +512,7 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
   }
 
   Widget _buildInputLabel(String label) {
-    return Text(
-      label,
-      style: const TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        color: AppColors.darkblack,
-        letterSpacing: 0.3,
-      ),
-    );
+    return Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.darkblack, letterSpacing: 0.3));
   }
 
   Widget _buildPremiumTextField({
@@ -743,70 +537,23 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validation,
       maxLines: obscure ? 1 : maxLines,
-      style: const TextStyle(
-        fontSize: 14.5,
-        fontWeight: FontWeight.w500,
-        color: AppColors.darkblack,
-      ),
+      style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w500, color: AppColors.darkblack),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 13.5,
-          color: AppColors.bordercolor,
-          fontWeight: FontWeight.w400,
-        ),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 14, right: 10),
-          child: Icon(icon, size: 19, color: AppColors.primary),
-        ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 46,
-          minHeight: 46,
-        ),
+        hintStyle: TextStyle(fontSize: 13.5, color: AppColors.bordercolor, fontWeight: FontWeight.w400),
+        prefixIcon: Padding(padding: const EdgeInsets.only(left: 14, right: 10), child: Icon(icon, size: 19, color: AppColors.primary)),
+        prefixIconConstraints: const BoxConstraints(minWidth: 46, minHeight: 46),
         suffixIcon:
-            isPassword
-                ? GestureDetector(
-                  onTap: onSuffixTap,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 14),
-                    child: Icon(
-                      suffixIcon,
-                      size: 19,
-                      color: AppColors.darkgreycolor,
-                    ),
-                  ),
-                )
-                : null,
-        suffixIconConstraints: const BoxConstraints(
-          minWidth: 46,
-          minHeight: 46,
-        ),
+            isPassword ? GestureDetector(onTap: onSuffixTap, child: Padding(padding: const EdgeInsets.only(right: 14), child: Icon(suffixIcon, size: 19, color: AppColors.darkgreycolor))) : null,
+        suffixIconConstraints: const BoxConstraints(minWidth: 46, minHeight: 46),
         filled: true,
         fillColor: AppColors.thirdwhite,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 15,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: AppColors.bordercolor, width: 1),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: AppColors.bordercolor, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.secondary, width: 1.8),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.4),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.8),
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.bordercolor, width: 1)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.bordercolor, width: 1)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.secondary, width: 1.8)),
+        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Colors.redAccent, width: 1.4)),
+        focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Colors.redAccent, width: 1.8)),
         errorMaxLines: errorMaxLine,
         errorStyle: const TextStyle(fontSize: 11.5),
       ),
@@ -825,68 +572,34 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
               await _registerApi();
             }
           } else {
-            Fluttertoast.showToast(
-              msg: 'Password and Confirm password must be same',
-            );
+            Fluttertoast.showToast(msg: 'Password and Confirm password must be same');
           }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           padding: EdgeInsets.zero,
         ),
         child: Ink(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [
-                AppColors.secondary,
-                Color(0xffA8895E),
-                AppColors.secondary,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              stops: [0.0, 0.5, 1.0],
-            ),
+            gradient: const LinearGradient(colors: [AppColors.secondary, Color(0xffA8895E), AppColors.secondary], begin: Alignment.topLeft, end: Alignment.bottomRight, stops: [0.0, 0.5, 1.0]),
             borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.secondary.withOpacity(0.38),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: AppColors.secondary.withOpacity(0.38), blurRadius: 18, offset: const Offset(0, 8))],
           ),
           child: Container(
             alignment: Alignment.center,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Create Account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.4,
-                    color: AppColors.white,
-                  ),
-                ),
+                const Text('Create Account', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: AppColors.white)),
                 const SizedBox(width: 10),
                 Container(
                   width: 26,
                   height: 26,
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withOpacity(0.20),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 14,
-                    color: AppColors.white,
-                  ),
+                  decoration: BoxDecoration(color: AppColors.white.withOpacity(0.20), shape: BoxShape.circle),
+                  child: const Icon(Icons.arrow_forward_rounded, size: 14, color: AppColors.white),
                 ),
               ],
             ),
@@ -899,46 +612,22 @@ class _MyRegisterScreenState extends State<MyRegisterScreen>
   // ── SIGN IN ROW ────────────────────────────────────────────────────────────
   Widget _buildSignInRow() {
     return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Already have an account? ',
-              style: TextStyle(
-                fontSize: 13,
-                color: AppColors.white.withOpacity(0.65),
-                fontWeight: FontWeight.w400,
-              ),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Already have an account? ', style: TextStyle(fontSize: 13, color: AppColors.white.withOpacity(0.65), fontWeight: FontWeight.w400)),
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.secondary.withOpacity(0.35), width: 1),
             ),
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.secondary.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: AppColors.secondary.withOpacity(0.35),
-                    width: 1,
-                  ),
-                ),
-                child: const Text(
-                  'Sign In',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.secondary,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )
-        .animate(delay: 700.ms)
-        .fade(duration: 600.ms)
-        .slideY(begin: 0.2, curve: Curves.easeOut);
+            child: const Text('Sign In', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.secondary, letterSpacing: 0.3)),
+          ),
+        ),
+      ],
+    ).animate(delay: 700.ms).fade(duration: 600.ms).slideY(begin: 0.2, curve: Curves.easeOut);
   }
 }
