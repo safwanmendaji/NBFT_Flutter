@@ -84,7 +84,7 @@ class _MyEditProfileState extends State<MyEditProfile> {
     return Scaffold(
       body: Column(
         children: [
-          const MyCustomHeaderLogo(),
+          //const MyCustomHeaderLogo(),
           const MyCustomHeader(
             title: "Edit Profile",
             isBackButton: true,

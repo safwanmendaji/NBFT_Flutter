@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
- import 'package:flutter_nobrokeragefortenants/models/visits/visit_model.dart';
- import 'package:flutter_nobrokeragefortenants/services/repositories/visits_repository.dart';
+import 'package:flutter_nobrokeragefortenants/models/visits/visit_model.dart';
+import 'package:flutter_nobrokeragefortenants/services/repositories/visits_repository.dart';
 
 class VisitsController extends ChangeNotifier {
   VisitsController({required this.repository, required this.isBroker});
@@ -8,7 +8,7 @@ class VisitsController extends ChangeNotifier {
   final VisitsRepository repository;
   final bool isBroker;
 
-  static const tabs = ['All', 'Upcoming', 'Completed', 'Cancelled'];
+  static const tabs = ['All', 'Pending', 'Upcoming', 'Completed', 'Cancelled'];
 
   int _selectedTab = 0;
   bool _isLoading = false;
@@ -20,23 +20,10 @@ class VisitsController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get actionVisitId => _actionVisitId;
   Object? get error => _error;
-  List<VisitModel> get visits => List.unmodifiable(_visits);
+  List<VisitModel> get visits => [];
 
   List<VisitModel> get visibleVisits {
-    if (_selectedTab == 0) return visits;
-
-    final status = tabs[_selectedTab].toLowerCase();
-    if (status == 'upcoming') {
-      return _visits
-          .where(
-            (visit) =>
-                visit.status == 'pending' || visit.status == 'confirmed',
-          )
-          .toList(growable: false);
-    }
-    return _visits
-        .where((visit) => visit.status == status)
-        .toList(growable: false);
+    return _visits;
   }
 
   Future<void> loadVisits() async {
@@ -44,7 +31,7 @@ class VisitsController extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      _visits = await repository.getVisits(isBroker: isBroker);
+      _visits = await repository.getVisits(isBroker: isBroker, status: tabs[selectedTab]);
     } catch (error) {
       _error = error;
     } finally {
@@ -56,14 +43,13 @@ class VisitsController extends ChangeNotifier {
   void selectTab(int index) {
     if (index == _selectedTab || index < 0 || index >= tabs.length) return;
     _selectedTab = index;
+    loadVisits();
     notifyListeners();
   }
 
-  Future<bool> confirmVisit(String visitId) =>
-      _performAction(visitId, repository.confirmVisit);
+  Future<bool> confirmVisit(String visitId) => _performAction(visitId, repository.confirmVisit);
 
-  Future<bool> cancelVisit(String visitId) =>
-      _performAction(visitId, repository.cancelVisit);
+  Future<bool> cancelVisit(String visitId) => _performAction(visitId, repository.cancelVisit);
 
   Object? takeError() {
     final currentError = _error;
@@ -71,16 +57,13 @@ class VisitsController extends ChangeNotifier {
     return currentError;
   }
 
-  Future<bool> _performAction(
-    String visitId,
-    Future<void> Function(String visitId) action,
-  ) async {
+  Future<bool> _performAction(String visitId, Future<void> Function(String visitId) action, {String status = "All"}) async {
     _actionVisitId = visitId;
     _error = null;
     notifyListeners();
     try {
       await action(visitId);
-      _visits = await repository.getVisits(isBroker: isBroker);
+      _visits = await repository.getVisits(isBroker: isBroker, status: status);
       return true;
     } catch (error) {
       _error = error;

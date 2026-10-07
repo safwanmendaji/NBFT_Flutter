@@ -28,7 +28,7 @@ class _MyChangePasswordState extends State<MyChangePassword> {
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
-          const MyCustomHeaderLogo(),
+          //const MyCustomHeaderLogo(),
           const MyCustomHeader(
             isBackButton: true,
 

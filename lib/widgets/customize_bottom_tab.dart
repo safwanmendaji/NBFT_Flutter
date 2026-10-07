@@ -43,7 +43,6 @@ class _PrimaryBottomTabState extends State<PrimaryBottomTab> {
         isBroker: isBroker,
         currentIndex: currentIndex,
         onTap: (int value) {
-          print("CCC-${value}");
           currentIndex = value;
           setState(() {});
         },
@@ -104,18 +103,19 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color activeColor = Color(0xFF064D43);
-    const Color inactiveColor = Color(0xFF4F5963);
+    const Color activeColor = AppColors.pricecolor;
+    const Color inactiveColor = AppColors.secondary;
 
     final items = [
       if (isBroker) ...[
-        const _NavItem(icon: Icons.home_rounded, label: 'Home'),
-        const _NavItem(icon: Icons.search_rounded, label: 'Search'),
-        const _NavItem(icon: Icons.favorite_border_rounded, label: 'Shortlisted'),
-        const _NavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
+        const _NavItem(icon: Icons.home_rounded, label: 'Dashboard'),
+        const _NavItem(icon: Icons.apartment_outlined, label: 'Properties'),
+        const _NavItem(icon: Icons.groups_outlined, label: 'Leads'),
+        const _NavItem(icon: Icons.favorite, label: 'Visits'),
+        const _NavItem(icon: Icons.person_outline_rounded, label: 'More'),
       ] else ...[
         const _NavItem(icon:Icons.home_rounded,label: 'Home'),
-        const _NavItem(icon:Icons.favorite_border_rounded,label: 'Interested'),
+        const _NavItem(icon:Icons.favorite,label: 'Interested'),
         const _NavItem(icon:Icons.event_available_outlined, label:'Visit'),
         const _NavItem(icon:Icons.menu_rounded,label: 'Menu'),
       ],

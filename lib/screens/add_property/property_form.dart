@@ -489,7 +489,7 @@ class _MyAddPropertyFormState extends State<MyAddPropertyForm> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const MyCustomHeaderLogo(),
+          //const MyCustomHeaderLogo(),
           MyCustomHeader(
             title: widget.from == "Edit" ? 'Update Property' : 'Add Property',
             isBackButton: true,

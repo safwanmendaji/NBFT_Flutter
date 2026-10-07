@@ -54,6 +54,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
   int? iV;
+  bool? isInterested;
 
   Data(
       {this.sId,
@@ -71,6 +72,7 @@ class Data {
       this.furnished,
       this.status,
       this.postedBy,
+        this.isInterested,
       this.media,
       this.createdAt,
       this.updatedAt,
@@ -86,6 +88,7 @@ class Data {
     location = json['location'];
     state = json['state'];
     city = json['city'];
+    isInterested = json['isInterested'];
     pincode = json['pincode']?.toString();
     description = json['description'];
     type = json['type'];
@@ -119,6 +122,7 @@ class Data {
     data['description'] = description;
     data['type'] = type;
     data['category'] = category;
+    data['isInterested'] = isInterested;
     data['format'] = format;
     data['sizeType'] = sizeType;
     data['size'] = size;

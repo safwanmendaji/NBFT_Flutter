@@ -24,7 +24,7 @@ class _MyAccountState extends State<MyAccount> {
     return Scaffold(
       body: Column(
         children: [
-          const MyCustomHeaderLogo(),
+          //const MyCustomHeaderLogo(),
           const MyCustomHeader(
             title: "Account",
             isBackButton: true,

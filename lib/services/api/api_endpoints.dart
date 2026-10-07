@@ -21,7 +21,8 @@ class AppEndpoints {
   static String mySharedProperties = "shareproperty/mine";
   static String updateproperty = "property/updateproperty";
   static String customerdetail = "shareproperty/getcustomer";
-  static String changestatus = "shareproperty/changestatus";
+  static String changestatus = "property/changestatus";
+  static String deleteproperty(String id) =>"property/$id";
   static String userVisits = "visit/myvisits";
   static String brokerVisits = "visit/broker/myvisits";
   static String confirmVisit(String visitId) => "visit/confirm/$visitId";
@@ -35,6 +36,11 @@ class AppEndpoints {
   static String createPaymentOrder = "payments/initiate";
   static String verifyPayment = "payments/verify";
   static String myproperties = "interest/app/myproperties";
+  static String visitAvailability(String propertyId,String date) => "visit/availability/$propertyId?date=$date";
+  static String scheduleVisit = "visit/schedule";
+  static String toggleInterest = "interest/mark";
+  static String mysubscription = "subscription/mysubscription";
+  static String searchProperty = "searchProperty";
   static const String razorpayKeyId = String.fromEnvironment(
     'RAZORPAY_KEY_ID',
     defaultValue: 'rzp_live_bmghTU3JLdsiP9',

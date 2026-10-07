@@ -30,7 +30,7 @@ class _MyCustomheaderState extends State<MyCustomHeader> {
 
   _getHeader() => Container(
     width: screenSize!.width,
-    decoration: const BoxDecoration(color: AppColors.secondary),
+    decoration: const BoxDecoration(color: AppColors.white),
     child: Padding(
       padding: EdgeInsets.only(
         top: 8.0,
@@ -47,7 +47,7 @@ class _MyCustomheaderState extends State<MyCustomHeader> {
                 icon: const Icon(
                   Icons.arrow_back,
                   size: 24,
-                  color: AppColors.white,
+                  color: AppColors.blackColor,
                 ),
               )
               : Container(),
@@ -76,7 +76,7 @@ class _MyCustomheaderState extends State<MyCustomHeader> {
       title: getFormattedDate(),
       textFontSize: AppFonts.size13,
       textFontWeight: AppFonts.semiBold,
-      textColor: AppColors.white,
+      textColor: AppColors.blackColor,
     ),
   );
 }

@@ -12,8 +12,8 @@ class VisitApi implements VisitsRepository {
   final BuildContext context;
 
   @override
-  Future<List<VisitModel>> getVisits({required bool isBroker}) => _get(
-    isBroker ? AppEndpoints.brokerVisits : AppEndpoints.userVisits,
+  Future<List<VisitModel>> getVisits({required bool isBroker,required String status}) => _get(
+    isBroker ? AppEndpoints.brokerVisits : "${AppEndpoints.userVisits}?status=$status",
   );
 
   @override

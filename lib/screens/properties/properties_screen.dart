@@ -916,9 +916,8 @@ class _MyPropertiesScreenState extends State<MyPropertiesScreen> {
       ),
     );
 
-    if (result != null) {
-      await _poreprtiesApi();
-    }
+
+    _poreprtiesApi(from: 0);
   }
 
   // ---------------------------------------------------------- BOTTOM SHEET

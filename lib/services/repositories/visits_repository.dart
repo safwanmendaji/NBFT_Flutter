@@ -1,7 +1,7 @@
  import 'package:flutter_nobrokeragefortenants/models/visits/visit_model.dart';
 
 abstract interface class VisitsRepository {
-  Future<List<VisitModel>> getVisits({required bool isBroker});
+  Future<List<VisitModel>> getVisits({required bool isBroker,required String status});
 
   Future<void> confirmVisit(String visitId);
 

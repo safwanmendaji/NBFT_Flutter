@@ -11,7 +11,7 @@ import 'package:flutter_nobrokeragefortenants/widgets/user_top_header.dart';
 class UserPropertyDetails extends StatefulWidget {
   final Data property;
 
-  const   UserPropertyDetails({super.key, required this.property});
+  const UserPropertyDetails({super.key, required this.property});
 
   @override
   State<UserPropertyDetails> createState() => _UserPropertyDetailsState();
@@ -21,6 +21,14 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
   int imageIndex = 0;
   bool interested = false;
   bool interestLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    interested = widget.property.isInterested ?? false;
+    setState(() {});
+    super.initState();
+  }
 
   Data get property => widget.property;
 
@@ -68,7 +76,12 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                     ),
                   ],
                   if (broker?.email?.isNotEmpty == true)
-                    ListTile(contentPadding: EdgeInsets.zero, leading: const Icon(Icons.email_outlined, color: AppColors.primary), title: Text(broker!.email!), subtitle: const Text('Broker email')),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.email_outlined, color: AppColors.primary),
+                      title: Text(broker!.email!),
+                      subtitle: const Text('Broker email'),
+                    ),
                 ],
               ),
             ),
@@ -81,6 +94,7 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
   @override
   Widget build(BuildContext context) {
     final media = property.media ?? [];
+    final theme = Theme.of(context);
     final location = property.location ?? property.area ?? 'Location unavailable';
     return Scaffold(
       backgroundColor: Colors.white,
@@ -100,7 +114,7 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                   leading: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_ios_new_rounded)),
                   actions: [
                     IconButton(onPressed: _contactBroker, icon: const Icon(Icons.share_outlined)),
-                    IconButton(onPressed: _setInterest, icon: Icon(interested ? Icons.favorite : Icons.favorite_border)),
+                    IconButton(onPressed: _setInterest, icon: Icon(interested ? Icons.favorite : Icons.favorite_border, color: interested ? Colors.red : AppColors.white)),
                   ],
                   flexibleSpace: FlexibleSpaceBar(
                     background: Stack(
@@ -154,6 +168,35 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                         const Text('Property Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.primary)),
                         const SizedBox(height: 12),
                         _informationGrid(),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 48,
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: (){},
+                            //onPressed: () => _scheduleVisit(property),
+                            icon: const Icon(
+                              Icons.calendar_month_rounded,
+                              size: 19,
+                            ),
+                            label: const Text(
+                              'Schedule Visit',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              textStyle: theme.textTheme.labelLarge?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -181,9 +224,13 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: _setInterest,
-                  icon: Icon(interested ? Icons.favorite : Icons.favorite_border),
-                  label: Text(interested ? 'Interested' : 'I am Interested'),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(52)),
+                  icon: Icon(interested ? Icons.close : Icons.favorite_border),
+                  label: Text(interested ? 'Not Interested' : 'I am Interested'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: interested ? Colors.red.withValues(alpha: 0.5) : AppColors.primary,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(52),
+                  ),
                 ),
               ),
             ],

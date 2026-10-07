@@ -221,10 +221,7 @@ class _VisitsScreenState extends State<VisitsScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: _status(visit.status),
-                    ),
+
                   ],
                 ),
               ),
@@ -244,6 +241,15 @@ class _VisitsScreenState extends State<VisitsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // Align(
+          //   alignment: Alignment.centerLeft,
+          //   child: _status(visit.status),
+          // ),
+          TextButton.icon(
+            onPressed: isWorking ? null : () => _confirmVisit(visit),
+            icon: const Icon(Icons.pending, size: 18),
+            label: _status(visit.status),
+          ),
           if (visit.status == 'pending')
             TextButton.icon(
               onPressed: isWorking ? null : () => _confirmVisit(visit),

@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_nobrokeragefortenants/services/api/property_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -70,6 +71,8 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
 
+  bool active=false;
+
   int _currentIndex = 0;
   List<Map<String, dynamic>> specification = [];
 
@@ -111,7 +114,13 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
   // ------------------------------------------------------------------ HELPERS
 
   Widget _defaultImage({double? height, double? width}) {
-    return Container(height: height, width: width, color: const Color(0xFFEDF1F0), alignment: Alignment.center, child: const Icon(Icons.apartment_rounded, size: 64, color: AppColors.primary));
+    return Container(
+      height: height,
+      width: width,
+      color: const Color(0xFFEDF1F0),
+      alignment: Alignment.center,
+      child: const Icon(Icons.apartment_rounded, size: 64, color: AppColors.primary),
+    );
   }
 
   String get _formattedPrice {
@@ -138,7 +147,7 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
       backgroundColor: const Color(0xFFF7F8FA),
       body: Column(
         children: [
-          const MyCustomHeaderLogo(),
+          //const MyCustomHeaderLogo(),
           const MyCustomHeader(title: "Property Details", isBackButton: true),
           Expanded(
             child: SingleChildScrollView(
@@ -296,7 +305,11 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
                       child: Container(
                         height: 62,
                         width: 62,
-                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle, boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 14)]),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          shape: BoxShape.circle,
+                          boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 14)],
+                        ),
                         child: const Icon(Icons.play_arrow_rounded, size: 38, color: AppColors.primary),
                       ),
                     ),
@@ -320,7 +333,11 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 6))]),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 6))],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -350,7 +367,10 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(color: const Color(0xFFE7F1EF), borderRadius: BorderRadius.circular(20)),
-                    child: Text(widget.negotiable.toLowerCase() == 'yes' ? 'Negotiable' : 'Fixed Price', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                    child: Text(
+                      widget.negotiable.toLowerCase() == 'yes' ? 'Negotiable' : 'Fixed Price',
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primary),
+                    ),
                   ),
               ],
             ),
@@ -368,7 +388,11 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))]),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -387,7 +411,10 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: Text(_isEmpty(widget.address) ? '-' : widget.address, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: AppColors.blackColor, height: 1.45)),
+                    child: Text(
+                      _isEmpty(widget.address) ? '-' : widget.address,
+                      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: AppColors.blackColor, height: 1.45),
+                    ),
                   ),
                 ),
               ],
@@ -406,7 +433,11 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))]),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -424,7 +455,11 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
 
   Widget _sectionLabel(IconData icon, String label) {
     return Row(
-      children: [Icon(icon, size: 17, color: AppColors.primary), const SizedBox(width: 6), Text(label, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: AppColors.primary))],
+      children: [
+        Icon(icon, size: 17, color: AppColors.primary),
+        const SizedBox(width: 6),
+        Text(label, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: AppColors.primary)),
+      ],
     );
   }
 
@@ -535,12 +570,123 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
               Navigator.push(context, MaterialPageRoute(builder: (context) => MyCustomerDetails(propertyId: widget.propertyid)));
             },
           ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: _actionButton(
+                  //icon: AppIcons.icCustomerDetail,
+                  label: 'Delete',
+                  color: Colors.red,
+                  filled: false,
+                  onTap: () =>_confirmDeleteProperty(widget.propertyid.toString()),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text("Active", style: const TextStyle(color: AppColors.blackColor, fontSize: 14, fontWeight: FontWeight.w700)),
+                    Switch(
+                      value: active,
+                      onChanged: (val) async {
+                        _showInactiveDialog(widget.propertyid);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _actionButton({required String icon, required String label, required VoidCallback onTap, required bool filled}) {
+  Future<void> _showInactiveDialog(String propertyid) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Inactive Property'),
+          content: const Text(
+            'Are you sure you want to inactive this property?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              },
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, true);
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == true) {
+      await Propertyapis.managePropertyStatus(context: context, propertyId: widget.propertyid, action:active?"InActive":"Active");
+      Navigator.pop(context);
+    }
+  }
+
+Future<void> _confirmDeleteProperty(String propertyId) async {
+  final colorScheme = Theme.of(context).colorScheme;
+
+  final shouldDelete = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        icon: Icon(
+          Icons.delete_outline_rounded,
+          size: 32,
+          color: colorScheme.error,
+        ),
+        title: const Text(
+          'Delete Property?',
+          textAlign: TextAlign.center,
+        ),
+        content: const Text(
+          'Are you sure you want to delete this property? '
+              'This action cannot be undone.',
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.end,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext, false);
+            },
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: colorScheme.error,
+              foregroundColor: colorScheme.onError,
+            ),
+            onPressed: () {
+              Navigator.pop(dialogContext, true);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (shouldDelete == true && mounted) {
+    await Propertyapis.managePropertyStatus(context: context, propertyId: propertyId, action: "delete");
+    Navigator.pop(context);
+  }
+}
+  Widget _actionButton({String? icon, required String label, required VoidCallback onTap, required bool filled, Color? color}) {
     final bg = filled ? AppColors.secondary : AppColors.white;
     final fg = filled ? AppColors.white : AppColors.secondary;
 
@@ -550,8 +696,8 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: bg,
-          foregroundColor: fg,
+          backgroundColor: color ?? bg,
+          foregroundColor: color == null ? fg : AppColors.white,
           elevation: filled ? 3 : 0,
           shadowColor: filled ? const Color(0x33DFA24A) : null,
           side: filled ? null : const BorderSide(color: Color(0xFFDFA24A), width: 1.2),
@@ -560,18 +706,19 @@ class _MyPropertyDetailsState extends State<MyPropertyDetails> with SingleTicker
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 22,
-              width: 22,
-              child: Image.asset(
-                icon,
-                fit: BoxFit.contain,
-                color: filled ? AppColors.white : AppColors.secondary,
-                errorBuilder: (_, __, ___) => Icon(filled ? Icons.edit_outlined : Icons.person_outline, size: 20, color: filled ? AppColors.white : AppColors.secondary),
+            if (icon != null)
+              SizedBox(
+                height: 20,
+                width: 20,
+                child: Image.asset(
+                  icon,
+                  fit: BoxFit.contain,
+                  color: filled ? AppColors.white : AppColors.secondary,
+                  errorBuilder: (_, __, ___) => Icon(filled ? Icons.edit_outlined : Icons.person_outline, size: 20, color: filled ? AppColors.white : AppColors.secondary),
+                ),
               ),
-            ),
             const SizedBox(width: 12),
-            Text(label, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: fg)),
+            Text(label, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: color == null ? fg : AppColors.white)),
           ],
         ),
       ),

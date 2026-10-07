@@ -20,15 +20,21 @@ class UserTopHeader extends StatelessWidget {
           const Spacer(),
           IconButton(
             onPressed: () {
+              // final isBroker = Prefs.getString(LocalStrings.userrole, 'broker').toLowerCase() == 'broker';
+              // Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationsScreen(isBroker: isBroker)));
+            },
+            icon: const Icon(Icons.support_agent, size: 24),
+          ),IconButton(
+            onPressed: () {
               final isBroker = Prefs.getString(LocalStrings.userrole, 'broker').toLowerCase() == 'broker';
               Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationsScreen(isBroker: isBroker)));
             },
             icon: const Icon(Icons.notifications_none_rounded, size: 24),
           ),
-          GestureDetector(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyProfile())),
-            child: const CircleAvatar(radius: 17, backgroundColor: AppColors.primary, child: Icon(Icons.person_outline, color: Colors.white, size: 20)),
-          ),
+          // GestureDetector(
+          //   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyProfile())),
+          //   child: const CircleAvatar(radius: 17, backgroundColor: AppColors.primary, child: Icon(Icons.person_outline, color: Colors.white, size: 20)),
+          // ),
         ],
       ),
     );

@@ -157,6 +157,7 @@ class _BrokerLeadsScreenState extends State<BrokerLeadsScreen> {
   // ------------------------------------------------------------- BOOK VISIT
 
   void _bookVisit(Map<String, dynamic> lead) {
+
     final customer = _nested(lead, ['customer', 'customerDetail', 'user']);
     final name = _value(customer, ['fullName', 'name'], 'Customer');
     final property = _nested(lead, ['property', 'propertyDetail']);
@@ -501,16 +502,16 @@ class _BrokerLeadsScreenState extends State<BrokerLeadsScreen> {
   // --------------------------------------------------------------- LEAD CARD
 
   Widget _leadCard(Map<String, dynamic> lead, int index) {
+    print("Lead ${lead}");
     final customer = _nested(lead, ['customer', 'customerDetail', 'user']);
     final property = _nested(lead, ['property', 'propertyDetail']);
 
-    final customerName = _value(customer, ['fullName', 'name'], 'Customer');
-    final phone = _getPhone(lead);
-    final propertyName = _value(property, [
-      'title',
-      'propertyName',
-    ], 'your property');
-    final location = _value(property, ['location', 'area'], '-');
+    final customerName = lead["user"]["fullName"]??"";
+    final phone =lead["user"]["mobileNo"]??"";
+    final propertyName = lead["propertyTitle"]??"";
+    final location =  lead["propertyAddress"]??"";
+
+
     final status = _value(lead, ['status'], 'New');
     final dateRaw = _value(lead, ['createdAt', 'date'], '');
     final date = _formatDate(dateRaw);

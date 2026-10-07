@@ -63,7 +63,18 @@ class _MySplashScreenState extends State<MySplashScreen> {
 
   void _openSession(Widget screen) {
     if (!mounted) return;
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => screen), (_) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => screen,
+        ),
+            (_) => false,
+      );
+    });
   }
 
   void _goToLogin() {

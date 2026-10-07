@@ -82,7 +82,7 @@ class _MyCustomerDetailsState extends State<MyCustomerDetails> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const MyCustomHeaderLogo(),
+          //const MyCustomHeaderLogo(),
           const MyCustomHeader(
             title: "Suggested Customers",
             isBackButton: true,

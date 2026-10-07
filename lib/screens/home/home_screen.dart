@@ -316,7 +316,8 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
   }
 
   void _onAddProperty() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const MyAddPropertiesScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const PropertyPurposeScreen()));
+    //Navigator.push(context, MaterialPageRoute(builder: (context) => const MyAddPropertiesScreen()));
   }
 
   // ------------------------------------------------------------------ UI PARTS
@@ -391,9 +392,9 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
             ],
           ),
         ),
-        _circleIconButton(icon: Icons.add_home_work_outlined, onTap: _onAddProperty, filled: true),
-        const SizedBox(width: 10),
-        _circleIconButton(icon: Icons.notifications_none_rounded, onTap: () {}),
+        // _circleIconButton(icon: Icons.add_home_work_outlined, onTap: _onAddProperty, filled: true),
+        // const SizedBox(width: 10),
+        // _circleIconButton(icon: Icons.notifications_none_rounded, onTap: () {}),
       ],
     );
   }
@@ -513,7 +514,8 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
         Container(
           height: 52,
           padding: const EdgeInsets.symmetric(horizontal: 14),
-          decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(14), boxShadow: const [BoxShadow(color: Color(0x1FDFA24A), blurRadius: 10, offset: Offset(0, 4))]),
+          decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(14), boxShadow: const [BoxShadow(color: Color(0x1FDFA24A), blurRadius: 10, offset:
+          Offset(0, 4))]),
           child: Row(
             children: [
               Image.asset(AppIcons.icFilter, height: 18, width: 18, fit: BoxFit.cover),
@@ -608,7 +610,8 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
 
   Widget _summaryCard(IconData icon, String label, int value, Color tint) {
     return Container(
-      width: 132,
+      width: 100,
+      height: 100,
       margin: const EdgeInsets.only(right: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -618,12 +621,19 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
         boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10)],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(height: 32, width: 32, decoration: BoxDecoration(color: tint, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: AppColors.primary, size: 17)),
-          Text('$value', style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700)),
-          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.gray500, fontSize: 11)),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(height: 32, width: 32, decoration: BoxDecoration(color: tint, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: AppColors.primary, size: 17)),
+              Text('$value', style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700)),
+            ],
+          ),
+          const SizedBox(height: 10,),
+          Expanded(child: Text(label,
+              textAlign: TextAlign.start,
+              style: const TextStyle(color: AppColors.blackColor, fontSize: 11,fontWeight: FontWeight.w700))),
         ],
       ),
     );
@@ -758,91 +768,373 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
   }
 
   Widget _propertyCard(Data property) {
-    final title = (property.title ?? '').trim().isEmpty ? 'Untitled property' : property.title!;
-    final location = (property.location ?? property.area ?? '').trim().isEmpty ? '-' : (property.location ?? property.area)!;
-    final price = (property.price ?? '').toString().trim().isEmpty ? '-' : property.price.toString();
-    final type = (property.type ?? '').trim().isEmpty ? '-' : property.type!;
+    final title = (property.title ?? '').trim().isEmpty
+        ? 'Untitled property'
+        : property.title!;
 
-    return GestureDetector(
-      onTap: () => _openDetails(property),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 6))]),
+    final location =
+    (property.location ?? property.area ?? '').trim().isEmpty
+        ? '-'
+        : (property.location ?? property.area)!;
+
+    final price = (property.price ?? '').toString().trim().isEmpty
+        ? '-'
+        : property.price.toString();
+
+    final type = (property.type ?? '').trim().isEmpty
+        ? 'Residential'
+        : property.type!;
+
+    final category = (property.category ?? '').trim().isEmpty
+        ? 'Property'
+        : property.category!;
+
+    final size = (property.size ?? '').toString().trim().isEmpty
+        ? '-'
+        : property.size.toString();
+
+    final format = (property.format ?? '').trim().isEmpty
+        ? '-'
+        : property.format!;
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 18),
+      elevation: 0,
+      clipBehavior: Clip.antiAlias,
+      color: colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.35),
+        ),
+      ),
+      child: InkWell(
+        onTap: () => _openDetails(property),
+        borderRadius: BorderRadius.circular(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ==========================================================
+            // IMAGE
+            // ==========================================================
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-                  child: _buildPropertyMedia(property, height: 190, width: double.infinity),
-                ),
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.55), borderRadius: BorderRadius.circular(20)),
-                    child: Text(type, style: const TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.w600)),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  child: SizedBox(
+                    height: 205,
+                    width: double.infinity,
+                    child: _buildPropertyMedia(
+                      property,
+                      height: 205,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
+
+                // Bottom gradient
                 Positioned(
-                  top: 12,
-                  right: 12,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 75,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.55),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // ======================================================
+                // PROPERTY TYPE
+                // ======================================================
+                Positioned(
+                  top: 14,
+                  left: 14,
+                  child: _imageBadge(
+                    icon: Icons.home_work_rounded,
+                    text: type,
+                    backgroundColor:
+                    Colors.black.withValues(alpha: 0.55),
+                  ),
+                ),
+
+                // ======================================================
+                // PRICE
+                // ======================================================
+                Positioned(
+                  top: 14,
+                  right: 14,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 13,
+                      vertical: 9,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.12),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.currency_rupee_rounded, size: 12, color: Colors.white),
-                        const SizedBox(width: 2),
-                        Text(price, style: const TextStyle(color: Colors.white, fontSize: 11.5, fontWeight: FontWeight.w700)),
+                        Icon(
+                          Icons.currency_rupee_rounded,
+                          size: 15,
+                          color: colorScheme.onSecondary,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          price,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: colorScheme.onSecondary,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
+
+                // ======================================================
+                // PHOTO COUNT
+                // ======================================================
+                Positioned(
+                  left: 14,
+                  bottom: 13,
+                  child: _imageBadge(
+                    icon: Icons.photo_library_outlined,
+                    text: _getPhotoCount(property),
+                    backgroundColor:
+                    Colors.black.withValues(alpha: 0.60),
+                  ),
+                ),
+
+                // ======================================================
+                // FAVORITE
+                // ======================================================
+                // Positioned(
+                //   right: 14,
+                //   bottom: 11,
+                //   child: Material(
+                //     color: Colors.black.withValues(alpha: 0.45),
+                //     shape: const CircleBorder(),
+                //     child: InkWell(
+                //       customBorder: const CircleBorder(),
+                //       onTap: () {
+                //         // Add favorite action here
+                //       },
+                //       child: const Padding(
+                //         padding: EdgeInsets.all(10),
+                //         child: Icon(
+                //           Icons.favorite_border_rounded,
+                //           color: Colors.white,
+                //           size: 22,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
+
+            // ==========================================================
+            // DETAILS
+            // ==========================================================
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 17),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: AppColors.blackColor)),
-                  const SizedBox(height: 5),
+                  // ----------------------------------------------------
+                  // TITLE + CATEGORY
+                  // ----------------------------------------------------
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: colorScheme.onSurface,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      // Category chip
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 7,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer
+                              .withValues(alpha: 0.55),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.category_outlined,
+                              size: 14,
+                              color: colorScheme.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              category,
+                              style:
+                              theme.textTheme.labelMedium?.copyWith(
+                                color: colorScheme.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 7),
+
+                  // ----------------------------------------------------
+                  // LOCATION
+                  // ----------------------------------------------------
                   Row(
                     children: [
-                      Image.asset(AppIcons.icLocation, height: 12, width: 12, fit: BoxFit.cover),
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 19,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                       const SizedBox(width: 5),
-                      Expanded(child: Text(location, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: AppColors.greyColor, fontWeight: FontWeight.w500))),
+                      Expanded(
+                        child: Text(
+                          location,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  const Divider(height: 1, color: Color(0xFFEFF2F2)),
-                  const SizedBox(height: 10),
+
+                  const SizedBox(height: 15),
+
+                  Divider(
+                    height: 1,
+                    color: colorScheme.outlineVariant
+                        .withValues(alpha: 0.5),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // ====================================================
+                  // PROPERTY SPECS
+                  // ====================================================
                   Row(
                     children: [
-                      _specItem(Icons.aspect_ratio_rounded, '${property.size ?? '-'} sqft'),
-                      const SizedBox(width: 14),
-                      _specItem(Icons.bed_outlined, '${property.format ?? '-'}'),
-                      const Spacer(),
-                      if ((property.category ?? '').isNotEmpty) _specItem(Icons.category_outlined, property.category!),
+                      Expanded(
+                        child: _specItem(
+                          context,
+                          icon: Icons.aspect_ratio_rounded,
+                          value: size,
+                          label: 'sqft',
+                        ),
+                      ),
+
+                      _verticalDivider(context),
+                  if(property.type=="Residential")...[
+                    Expanded(
+                      child: _specItem(
+                        context,
+                        icon: Icons.bed_outlined,
+                        value: format,
+                        label: '',
+                      ),
+                    ),
+
+                    _verticalDivider(context),
+
+                    Expanded(
+                      child: _specItem(
+                        context,
+                        icon: Icons.home_work_outlined,
+                        value: category,
+                        label: '',
+                      ),
+                    ),
+                  ]
+
                     ],
                   ),
-                  const SizedBox(height: 14),
+
+                  const SizedBox(height: 17),
+
+                  // ====================================================
+                  // VIEW DETAILS BUTTON
+                  // ====================================================
                   SizedBox(
                     width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
+                    height: 50,
+                    child: FilledButton(
                       onPressed: () => _openDetails(property),
-                      style: ElevatedButton.styleFrom(
+                      style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.white,
+                        foregroundColor: colorScheme.onPrimary,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
                       ),
-                      child: const Text('View Details', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'View Details',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 19,
+                            color: colorScheme.onPrimary,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -854,11 +1146,214 @@ class _MyNewHomeScreenState extends State<MyNewHomeScreen> {
     );
   }
 
-  Widget _specItem(IconData icon, String text) {
-    return Row(
-      children: [Icon(icon, size: 15, color: AppColors.primary), const SizedBox(width: 4), Text(text, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary))],
+  Widget _imageBadge({
+    required IconData icon,
+    required String text,
+    required Color backgroundColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 11,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: Colors.white,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
     );
   }
+
+  Widget _specItem(
+      BuildContext context, {
+        required IconData icon,
+        required String value,
+        required String label,
+      }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color: AppColors.primary
+        ),
+        const SizedBox(width: 7),
+        Flexible(
+          child: RichText(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: value,
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                if (label.isNotEmpty)
+                  TextSpan(
+                    text: '\n$label',
+                    style: TextStyle(
+                      color: colorScheme.onSurfaceVariant,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _verticalDivider(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      height: 30,
+      width: 1,
+      color: colorScheme.outlineVariant.withValues(
+        alpha: 0.55,
+      ),
+    );
+  }
+
+  String _getPhotoCount(Data property) {
+    final count = property.media?.length ?? 0;
+
+    if (count == 0) {
+      return 'No Photos';
+    }
+
+    return '$count ${count == 1 ? 'Photo' : 'Photos'}';
+  }
+
+  // Widget _propertyCard(Data property) {
+  //   final title = (property.title ?? '').trim().isEmpty ? 'Untitled property' : property.title!;
+  //   final location = (property.location ?? property.area ?? '').trim().isEmpty ? '-' : (property.location ?? property.area)!;
+  //   final price = (property.price ?? '').toString().trim().isEmpty ? '-' : property.price.toString();
+  //   final type = (property.type ?? '').trim().isEmpty ? '-' : property.type!;
+  //
+  //   return GestureDetector(
+  //     onTap: () => _openDetails(property),
+  //     child: Container(
+  //       margin: const EdgeInsets.only(bottom: 16),
+  //       decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 14, offset: Offset(0, 6))]),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Stack(
+  //             children: [
+  //               ClipRRect(
+  //                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+  //                 child: _buildPropertyMedia(property, height: 190, width: double.infinity),
+  //               ),
+  //               Positioned(
+  //                 top: 12,
+  //                 left: 12,
+  //                 child: Container(
+  //                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+  //                   decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.55), borderRadius: BorderRadius.circular(20)),
+  //                   child: Text(type, style: const TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.w600)),
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: 12,
+  //                 right: 12,
+  //                 child: Container(
+  //                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+  //                   decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(20)),
+  //                   child: Row(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       const Icon(Icons.currency_rupee_rounded, size: 12, color: Colors.white),
+  //                       const SizedBox(width: 2),
+  //                       Text(price, style: const TextStyle(color: Colors.white, fontSize: 11.5, fontWeight: FontWeight.w700)),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: AppColors.blackColor)),
+  //                 const SizedBox(height: 5),
+  //                 Row(
+  //                   children: [
+  //                     Image.asset(AppIcons.icLocation, height: 12, width: 12, fit: BoxFit.cover),
+  //                     const SizedBox(width: 5),
+  //                     Expanded(child: Text(location, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: AppColors.greyColor, fontWeight: FontWeight.w500))),
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 10),
+  //                 const Divider(height: 1, color: Color(0xFFEFF2F2)),
+  //                 const SizedBox(height: 10),
+  //                 Row(
+  //                   children: [
+  //                     _specItem(Icons.aspect_ratio_rounded, '${property.size ?? '-'} sqft'),
+  //                     const SizedBox(width: 14),
+  //                     _specItem(Icons.bed_outlined, property.format ?? '-'),
+  //                     const Spacer(),
+  //                     if ((property.category ?? '').isNotEmpty) _specItem(Icons.category_outlined, property.category!),
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 14),
+  //                 SizedBox(
+  //                   width: double.infinity,
+  //                   height: 40,
+  //                   child: ElevatedButton(
+  //                     onPressed: () => _openDetails(property),
+  //                     style: ElevatedButton.styleFrom(
+  //                       backgroundColor: AppColors.primary,
+  //                       foregroundColor: AppColors.white,
+  //                       elevation: 0,
+  //                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+  //                     ),
+  //                     child: const Text('View Details', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _specItem(IconData icon, String text) {
+  //   return Row(
+  //     children: [Icon(icon, size: 15, color: AppColors.primary), const SizedBox(width: 4), Text(text, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary))],
+  //   );
+  // }
 
   void _openDetails(Data property) {
     Navigator.push(
